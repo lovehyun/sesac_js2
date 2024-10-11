@@ -2,14 +2,49 @@
 <HTML>
 <HEAD>
     <TITLE>Photo Calendar</TITLE>
+    <STYLE>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        #calendar {
+            width: 100%;
+            border: 2px solid;
+            height: 200px;
+        }
+        
+        #calendar th {
+            width: 14%;
+            background-color: #dbdbdb;
+        }
+        
+        #calendar td {
+            padding: 10px;
+            text-align: center;
+            border: 1px dashed #cccccc;
+        }
+        
+        #calendar th:first-child, 
+        #calendar td:first-child {
+            color: #ff0000;
+        }
+
+        #calendar th:last-child,
+        #calendar td:last-child {
+            color: #0000ff;
+        }
+    </STYLE>
 </HEAD>
 <BODY>
-    <CENTER>
     <H1>Photo Calendar</H1>
     <H2>2024년 10월</H2>
-    </CENTER>
-    <IMG src="scene1.jpg" width="100%">
-    <TABLE border="1" width="100%">
+    <IMG src="images/scene1.jpg" width="100%">
+    <TABLE width="100%" id="calendar">
         <THEAD>
             <TR>
                 <TH>Sun</TH>
