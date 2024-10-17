@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <button id="print">이 페이지를 출력하기</button>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad aspernatur sapiente quisquam amet voluptates suscipit, autem quod quas exercitationem? Beatae odit, velit assumenda quo ipsum neque corporis. Ipsam, molestias nesciunt</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis placeat nemo et explicabo impedit mollitia repudiandae reprehenderit consequuntur. Ducimus tempore explicabo voluptas incidunt rerum aspernatur quos id molestiae magni aperiam.</p>
+    <script>
+        document.getElementById('print').addEventListener('click', () => {
+            window.print();
+        })
+
+        window.onbeforeprint = function() {
+            console.log('출력하기전 이벤트...')
+        }
+
+        window.onafterprint = function() {
+            console.log('출력이후 이벤트...')
+        }
+    </script>
+</body>
+</html>
