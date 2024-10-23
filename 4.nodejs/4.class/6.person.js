@@ -5,11 +5,15 @@ class Person {
         this.gender = gender;
     }
 
-    greet() { // 함수(function) = 클래스의 함수를 Method 라고 부름..
-        console.log(`안녕, 나는 ${this.name}이고, ${this.age}살이야`);
+    greet(name) { // 함수(function) = 클래스의 함수를 Method 라고 부름..
+        console.log(`안녕 ${name}님, 나는 ${this.name}이고, ${this.age}살이야`);
     }
-    walk() {
-        console.log(`${this.name}이(가) 걷고 있습니다.`);
+    walk(distance) {
+        if (distance) { // distance 의 truty인지를 확인함..
+            console.log(`${this.name}이(가) ${distance}미터를 걷고 있습니다.`);
+        } else {
+            console.log(`${this.name}이(가) 멍~하니 걷고 있습니다.`);
+        }
     }
     eat() {
         console.log(`${this.name}이(가) 식사 중입니다.`);
@@ -17,7 +21,8 @@ class Person {
 }
 
 const person1 = new Person("철수", 25, "남성");
-person1.greet();
+person1.greet("길동");
+person1.walk(10);
 person1.walk();
 person1.eat();
 
@@ -38,8 +43,11 @@ class Employee extends Person {
 }
 
 const employee1 = new Employee("영희", 30, "여성", "매니저", 50000);
+const employee2 = new Employee("영수", 31, "여성", null, 50000);
 employee1.greet();
+employee2.greet();
 employee1.displayInfo();
+employee2.displayInfo();
 employee1.walk();
 employee1.work();
 
@@ -65,3 +73,73 @@ class Manager extends Employee {
 
 const manager1 = new Manager("수현", 35, "남성", "팀장", 60000, "개발");
 manager1.assignTask();
+
+class Student extends Person {
+    constructor(name, age, gender, studentId, major) {
+        super(name, age, gender);
+        this.studentId = studentId;
+        this.major = major;
+    }
+
+    study() {
+        console.log(`${this.name} 학생은 ${this.age} 이고, ${this.major} 를 공부하고 있습니다.`)
+    }
+}
+
+class Customer extends Person {
+    constructor(name, age, gender, customerId, orderHistory) {
+        super(name, age, gender);
+        this.customerId = customerId;
+        this.orderHistory = orderHistory;
+    }
+    placeOrder(product) {
+        console.log(`${this.name} 고객이 ${product}를 주문하였습니다`);
+        this.orderHistory.push(product);
+    }
+
+    printOrderHistory() {
+        console.log("주문 목록: ");
+        for (let i = 0; i < this.orderHistory.length; i++) {
+            console.log(" - " + this.orderHistory[i])
+        }
+
+        this.orderHistory.forEach((orderItem) => {
+            console.log(`<li>${orderItem}</li>`)
+        });
+
+        console.log(`주문 내역: ${this.orderHistory.join('<BR>')}`);
+    }
+}
+
+const student1 = new Student("지연", 20, "여성", "20240101", "컴퓨터공학");
+student1.study();
+
+const customer1 = new Customer("지민", 22, "여성", "C1001", ["커피", "라떼"]);
+customer1.placeOrder("생크림케익");
+customer1.printOrderHistory();  // 이 사람이 지금까지 주문한 내역을 모두 출력하시오...
+
+console.log('-----');
+console.log('-'.repeat(20));
+
+const people = [manager1, student1, customer1, employee1, employee2]
+introduce(people);
+
+function introduce(people) {
+    // for (let i = 0; i < people.length; i++)
+
+    for (const person of people) {
+        person.greet("철수");
+    }
+
+    for (let i= 0; i < people.length; i++) {
+        people[i].walk(Math.floor(Math.random()*10+1));
+    }
+
+    people.forEach((person) => {
+        if (person instanceof Employee) {
+            person.work();
+        } else if (person instanceof Student) {
+            person.study();
+        }
+    })
+}
