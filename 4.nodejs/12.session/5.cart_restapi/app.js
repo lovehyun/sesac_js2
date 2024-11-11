@@ -122,8 +122,23 @@ app.post('/api/cart/:productId', checkLogin, (req, res) => {
     res.json({ message: '장바구니 담기 성공', cart });
 });
 
-app.put('/api/cart', checkLogin, (req, res) => {
+app.put('/api/cart/:productId', checkLogin, (req, res) => {
+    const productId = parseInt(req.params.productId);
+    const change = parseInt(req.query.change);
+    console.log(`상품ID: ${productId}, 변동수량: ${change}`)
 
+    const cart = req.session.cart || [];
+    const item = cart.find((i) => i.id === productId);
+
+    if (!item) {
+        return res.status(404).json({ message: '상품 찾을수 없음' });
+    }
+
+    item.quantity = Math.max(1, item.quantity + change);
+
+    req.session.cart = cart;
+
+    res.json({message: '수량 변경 성공'});
 });
 
 app.delete('/api/cart/:productId', checkLogin, (req, res) => {
