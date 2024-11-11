@@ -1,7 +1,16 @@
-import { checkLoginStatus } from './checkuser.js';
+import { fetch_checkLoginStatus } from './checkuser.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    checkLoginStatus()
+    checkLoginStatus();
+
+    document.getElementById('login').addEventListener('click', (event) => {
+        event.preventDefault();
+        login();
+    });
+});
+
+function checkLoginStatus() {
+    fetch_checkLoginStatus()
         .then(username => {
             if (username) {
                 showProfile(username);
@@ -9,12 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showLoginForm();
             }
         })
-
-    document.getElementById('login').addEventListener('click', (event) => {
-        event.preventDefault();
-        login();
-    });
-});
+}
 
 function login() {
     const username = document.getElementById('username').value;
@@ -37,7 +41,7 @@ function login() {
             }
         })
         .then((data) => { // 로그인 성공시 json 결과 파싱해서 다시 데이터 추출함
-            showProfile(data.username);
+            checkLoginStatus();
         })
         .catch((error) => { // 로그인 실패시 오류 처리
             alert('로그인 실패');

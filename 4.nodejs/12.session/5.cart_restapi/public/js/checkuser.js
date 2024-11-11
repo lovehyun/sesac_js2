@@ -1,5 +1,5 @@
 
-export function checkLoginStatus() {
+export function fetch_checkLoginStatus() {
     return fetch('/api/check-login')
         .then((response) => response.json())
         .then((userData) => {

@@ -1,4 +1,7 @@
+import { fetch_checkLoginStatus } from './checkuser.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+    fetch_checkLoginStatus();
     loadProduct();
 });
 
@@ -33,5 +36,20 @@ function displayProducts(products) {
 
 function addToCart(productId) {
     // fetch 구현필요...
-    console.log(`FETCH 구현필요 ${productId} 를 담아서 보내기...`);
+    fetch(`/api/cart/${productId}`, {
+        method: 'POST',
+    })
+        .then((response) => {
+            if (response.ok) {
+                // 장바구니 담기 성공
+            } else if (response.status === 401 ) {
+                response.json()
+                    .then((data) => {
+                        alert (data.message);
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        }
+                    });
+            }
+        })
 }
