@@ -20,4 +20,37 @@ function queryName(db, searchName) {
     });
 }
 
-module.exports = {connectToDatabase, queryName};
+function queryAll(db, searchOptions) {
+    let selectQuery = 'SELECT * FROM employees WHERE 1=1 ';
+    const queryParams = [];
+
+    if (searchOptions.name) {
+        selectQuery += 'AND name = ?';
+        queryParams.push(searchOptions.name);
+    }
+
+    if (searchOptions.department) {
+        selectQuery += 'AND department = ?';
+        queryParams.push(searchOptions.department);
+    }
+
+    if (searchOptions.salary) {
+        selectQuery += 'AND salary = ?';
+        queryParams.push(searchOptions.salary);
+    }
+
+    console.log(selectQuery);
+
+    console.time('Query Time');
+
+    db.all(selectQuery, queryParams, (err, rows) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            console.log('결과: ', rows)
+            console.timeEnd('Query Time');
+        }
+    })
+}
+
+module.exports = {connectToDatabase, queryName, queryAll};
