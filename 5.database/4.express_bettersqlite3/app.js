@@ -30,6 +30,37 @@ function initilizeDatabase() {
 
 initilizeDatabase();
 
+app.get('/products', (req, res) => {
+    // const name = req.query.name;
+    const { name } = req.query;
+
+    console.log(name);
+
+    if (name) {
+        const query = db.prepare('SELECT * FROM products WHERE name LIKE ?');
+        const rows = query.all(`%${name}%`); // all 은 [], get {}
+        console.log(rows);
+
+        res.json(rows);
+    } else {
+        const query = db.prepare('SELECT * FROM products');
+        const rows = query.all();
+        res.json(rows);
+    }
+});
+
+// 매우매우 취약한 코드.. 실무에서 절대 하지 말것..
+// 브라우저에 /product_weak?name=' UNION SELECT * FROM users --
+app.get('/products_weak', (req, res) => {
+    const { name } = req.query;
+
+    console.log(name);
+    const queryStr = `SELECT * FROM products WHERE name LIKE '%${name}%'`;
+    const query = db.prepare(queryStr);
+    const rows = query.all();
+    res.json(rows);
+});
+
 app.get('/users', (req, res) => {
     // 여러개 반납
     try {
