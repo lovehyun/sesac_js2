@@ -1,13 +1,32 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const morgan = require('morgan');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
 const db = new sqlite3.Database('user-sample.db');
 
+const logStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a'});
+
 // 미들웨어
 app.use(express.static('public')); 
+app.use(morgan('combined', {stream: logStream}));
+app.use(morgan('dev'));
+
+// combined - 아파치 서버 로그 포멧
+// common - 요약된 형태
+// dev - 개발시 유용한 모드
+// tiny
+// short
+
+// app.use(myLogger)
+
+function myLogger(req, res, next) {
+    console.log(`LOG: ${req.method} ${req.url}`);
+    next();
+}
 
 // 라우트
 // 시스템 호출용 API 라우트
@@ -39,6 +58,6 @@ app.get('/', (req, res) => {
 
 // 서버 시작
 app.listen(port, () => {
-    console.log('서버 레디');
+    console.log('CRM Server is ready to start...');
+    console.log(`Server is ready on http://localhost:${port}`)
 });
-
