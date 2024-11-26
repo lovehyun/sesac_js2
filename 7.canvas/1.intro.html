@@ -19,6 +19,11 @@
         // 사각형 그리기
         context.fillStyle = '#FF0000'; // RGB 즉 빨강
         context.fillRect(50, 50, 100, 80); // (x, y, width, height)
+        context.strokeStyle = 'purple';
+        context.strokeRect(50, 100, 100, 80); // (x, y, width, height)
+        context.fillStyle = 'blue'
+        context.fillRect(80, 120, 40, 40); // (x, y, width, height)
+        context.clearRect(90, 130, 20, 20);
 
         // 선 그리기
         context.strokeStyle = '#0000FF'; // RGB에서 파란색
@@ -28,7 +33,9 @@
         context.lineTo(300, 130); // 끝점 설정
         context.lineTo(300, 70); // 끝점 설정
         context.lineTo(200, 50); // 끝점 설정
-        context.stroke(); // 실제로 그리기
+        context.fillStyle = 'green'
+        context.fill(); // 실제로 그리기
+        context.stroke();
         context.closePath();
 
         // 원 그리기

@@ -12,6 +12,7 @@ nunjucks.configure('views', {
 });
 
 app.set('view engine', 'njk'); // 눈적스 기본 확장자 njk -> html 로 변경
+                               // 다시 html -> njk 로 바꿈.. (개인 취향에 따라..)
 
 app.get('/', (req, res) => {
     const db = new sqlite3.Database('user-sample.db', (err) => {
@@ -26,7 +27,8 @@ app.get('/', (req, res) => {
     db.all(`
         SELECT 
             strftime('%Y-%m', "orders"."OrderAt") AS YearMonth,
-            SUM(items.UnitPrice) AS MonthlyRevenue
+            SUM(items.UnitPrice) AS MonthlyRevenue,
+            COUNT(order_items.ItemId) AS ItemCount
         FROM 
             "orders"
         JOIN 
@@ -43,7 +45,7 @@ app.get('/', (req, res) => {
         if (err) {
             console.error('쿼리 실패!!')
         } else {
-            // console.log(rows);
+            console.log(rows);
             const labels = rows.map((row) => row.YearMonth);
             const revenues = rows.map((row) => row.MonthlyRevenue);
             // console.log(JSON.stringify(labels));
@@ -51,9 +53,18 @@ app.get('/', (req, res) => {
 
             res.render('monthly_revenue', { 
                 rows, 
-                labels: JSON.stringify(labels), 
-                revenues: JSON.stringify(revenues)
+                // labels: JSON.stringify(labels), 
+                // revenues: JSON.stringify(revenues)
             });
+        }
+    });
+
+    // 데이터베이스 연결 닫기
+    db.close((err) => {
+        if (err) {
+            console.error("DB닫기 실패.. 왜?? ", err.message);
+        } else {
+            console.log('DB 닫기 성공');
         }
     });
 })
