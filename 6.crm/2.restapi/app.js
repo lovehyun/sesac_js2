@@ -13,7 +13,7 @@ const logStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { fla
 // 미들웨어
 app.use(express.static('public')); 
 app.use(morgan('combined', {stream: logStream}));
-app.use(morgan('dev'));
+app.use(morgan('common'));
 
 // combined - 아파치 서버 로그 포멧
 // common - 요약된 형태
