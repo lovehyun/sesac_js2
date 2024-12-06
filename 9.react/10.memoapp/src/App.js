@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import MemoForm from './components/MemoForm';
 import MemoList from "./components/MemoList";
 import MemoSearch from "./components/MemoSearch";
+import MemoDetail from './components/MemoDetail';
 import './styles.css';
 
 const App = () => {
@@ -11,6 +12,19 @@ const App = () => {
         return savedMemos ? JSON.parse(savedMemos) : []; // 있으면 문자열을 다시 JSON으로 변환해서 저장, 아니면 빈값으로 초기화
     });
     const [searchQuery, setSearchQuery] = useState(''); // 검색 상태
+    const [isDetailOpen, setIsDetailOpen] = useState(false); // 상세보기 여부
+    const [selectedMemo, setSelectedMemo] = useState(null); // 상세보기를 위해 선택한 항목
+
+    const showDetail = (id) => {
+        const memo = memos.find((m) => m.id === id);
+        setSelectedMemo(memo);
+        setIsDetailOpen(true);
+    }
+
+    const hideDetail = () => {
+        setSelectedMemo(null);
+        setIsDetailOpen(false);
+    }
 
     const addMemo = (text) => {
         const newMemo = {id: Date.now(), text, completed: false }; // 고유ID와 텍스트값으로 메모 객체 생성
@@ -100,7 +114,15 @@ const App = () => {
                 editMemo={editMemo} 
                 toggleDone={toggleComplete}
                 reorderMemos={reorderMemos}
+                showDetail={showDetail}
             />
+
+            {isDetailOpen && (
+                <MemoDetail
+                    memo={selectedMemo}
+                    onClose={hideDetail} 
+                />
+            )}
         </div>
     )
 }
