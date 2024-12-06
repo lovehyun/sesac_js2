@@ -1,17 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MemoForm from './components/MemoForm';
 import MemoList from "./components/MemoList";
 import MemoSearch from "./components/MemoSearch";
 import './styles.css';
 
 const App = () => {
-    const [memos, setMemos] = useState([]);
+    // const [memos, setMemos] = useState([]); // 초기화... ?? 로컬 스토리지에 데이터가 있으면?? 그걸 불러온다. 없으면?? [] 로 초기화 한다.
+    const [memos, setMemos] = useState(() => {
+        const savedMemos = localStorage.getItem('memos');
+        return savedMemos ? JSON.parse(savedMemos) : []; // 있으면 문자열을 다시 JSON으로 변환해서 저장, 아니면 빈값으로 초기화
+    });
     const [searchQuery, setSearchQuery] = useState(''); // 검색 상태
 
     const addMemo = (text) => {
         const newMemo = {id: Date.now(), text, completed: false }; // 고유ID와 텍스트값으로 메모 객체 생성
         setMemos([...memos, newMemo]); // 기존 메모 배열에 새 메모 추가
     }
+
+    // 메모의 상태가 변경될때마다.. OOO 의 추가작업을 더 한다..
+    useEffect(() => {
+        // 로컬 스토리지에 저장한다.
+        localStorage.setItem('memos', JSON.stringify(memos)); // 메모 상태를 JSON 문자열로 저장한다.
+    }, [memos]); // 메모가 변경될때마다...
 
     // 삭제 함수를 구현하고,
     const deleteMemo = (id) => {
