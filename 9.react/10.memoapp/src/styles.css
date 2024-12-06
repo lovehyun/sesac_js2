@@ -60,3 +60,14 @@ button {
     border-radius: 4px;
     box-sizing: border-box;
 }
+
+.drag-handle {
+    cursor: grab;
+    font-size: 20px;
+    margin-left: 10px;
+    color: #888;
+}
+
+.drag-handle:hover {
+    color: #333;
+}
