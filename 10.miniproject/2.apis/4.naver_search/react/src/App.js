@@ -12,7 +12,7 @@ const App = () => {
         setError(null);
 
         try {
-            const response = await fetch(`http://localhost:3000/search/blog?query=${encodeURIComponent(query)}`)
+            const response = await fetch(`/search/blog?query=${encodeURIComponent(query)}`)
             const data = await response.json();
             if (data.items) {
                 setResult(data.items);

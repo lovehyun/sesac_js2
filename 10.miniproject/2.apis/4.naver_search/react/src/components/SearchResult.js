@@ -3,7 +3,7 @@ const SearchResult = ({result}) => {
         <ul>
             {result.map((item, index) => (                
                 <li key={index}>
-                    <a href={item.link} target="_blank">
+                    <a href={item.link} target="_blank" rel="noopener noreferrer">
                         <h3>{item.title}</h3>
                     </a>
                     <p>{item.description}</p>
