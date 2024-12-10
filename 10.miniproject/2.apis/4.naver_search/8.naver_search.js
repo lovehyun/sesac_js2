@@ -3,13 +3,18 @@ require('dotenv').config();
 // 네이버 검색 API 예제 - 블로그 검색
 const express = require('express');
 const request = require('request');
+const morgan = require('morgan');
+const cors = require('cors');
+
 
 const app = express();
 const client_id = process.env.NAVER_CLIENT_ID;
 const client_secret = process.env.NAVER_CLIENT_SECRET;
 
 // 정적 파일 제공
+app.use(morgan('dev'));
 app.use(express.static('public'));
+app.use(cors());
 
 app.get('/search/blog', function (req, res) {
     const api_url = 'https://openapi.naver.com/v1/search/blog?query=' + encodeURI(req.query.query); // JSON 결과
