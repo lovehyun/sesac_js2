@@ -22,7 +22,7 @@ const fetchYoutube = async() => {
         for (let page = 1; page <= totalPages; page++) {
             const params = {
                 part: 'snippet',
-                q: '자바스크립트 개발',
+                q: '아이유',
                 type: 'video',
                 maxResults: maxResultPerPage,
                 pageToken: nextPageToken,
@@ -41,11 +41,12 @@ const fetchYoutube = async() => {
             console.log('다음페이지: ', nextPageToken);
         }
 
+        const table = [];
         for (let index = 0; index < searchResult.length; index++) {
         // searchResult.forEach(async (item) => {
             const item = searchResult[index];
 
-            const title = item.snippet.title; // 영상 제목
+            let title = item.snippet.title; // 영상 제목
             const videoId = item.id.videoId; // 비디오클립ID
             const videoUrl = `https://www.youtube.com/watch?v=${videoId}`; // 우리가 만든 URL
             const description = item.snippet.description; // 영상 설명
@@ -57,19 +58,90 @@ const fetchYoutube = async() => {
                 key: API_KEY
             }
 
-            const videoResponse = await axios.get(videoUrlAPI, { params: videoParams });
-            console.log(videoResponse.data);
-            break;
+            // 타이틀이 너무 길어서 짤라보기...
+            const maxTitleLength = 30;
+            if (title.length > maxTitleLength) {
+                title = title.slice(0, maxTitleLength) + "...";
+            }
 
+            const videoResponse = await axios.get(videoUrlAPI, { params: videoParams });
+            const videoData = videoResponse.data;
+            const viewCount = videoData.items[0]?.statistics?.viewCount || 'N/A'
+            // console.log(viewCount);
+            table.push({ Index: index+1, Title: title, 'ViewCount': viewCount, 'VideoURL': videoUrl });
+            
             // console.log(`영상제목: ${title}`);
             // console.log(`URL주소: ${videoUrl}`);
             // console.log(`설명: ${description}`);
             // console.log('-'.repeat(40));
         };
 
+        console.table(table);
+
     } catch (error) {
         console.error('요청실패: ', error.message);
     }
 }
 
-fetchYoutube();
+const fetchYoutube_parallel = async() => {
+    let nextPageToken = null;
+
+    try {
+        for (let page = 1; page <= totalPages; page++) {
+            const params = {
+                part: 'snippet',
+                q: '아이유',
+                type: 'video',
+                maxResults: maxResultPerPage,
+                pageToken: nextPageToken,
+                key: API_KEY
+            }
+
+            console.log('start req');
+            const response = await axios.get(searchUrlAPI, { params });
+            console.log('end req');
+            const data = response.data;
+
+            searchResult.push(...data.items);
+        }
+
+        // Promise.all 을 통해서 전체를 병행처리...
+        const table = await Promise.all( // 이거 안에서 처리한게 모두다 끝나면 종료가 됨.
+            searchResult.map(async (item, index) => {
+                let title = item.snippet.title; // 영상 제목
+                const videoId = item.id.videoId; // 비디오클립ID
+                const videoUrl = `https://www.youtube.com/watch?v=${videoId}`; // 우리가 만든 URL
+                const description = item.snippet.description; // 영상 설명
+
+                // 각각의 비디오 클립에 대해서 추가정보를 조회...
+                const videoParams = {
+                    part: 'statistics',
+                    id: videoId,
+                    key: API_KEY
+                }
+
+                // 타이틀이 너무 길어서 짤라보기...
+                const maxTitleLength = 30;
+                if (title.length > maxTitleLength) {
+                    title = title.slice(0, maxTitleLength) + "...";
+                }
+
+                const videoResponse = await axios.get(videoUrlAPI, { params: videoParams });
+                const videoData = videoResponse.data;
+                const viewCount = videoData.items[0]?.statistics?.viewCount || 'N/A'
+                // console.log(viewCount);
+                return { Index: index+1, Title: title, 'ViewCount': viewCount, 'VideoURL': videoUrl };
+            })
+        )
+        console.table(table);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+console.time("실행시간");  // 타이머 시작
+(async () => {
+    await fetchYoutube_parallel();
+    // await fetchYoutube();
+    console.timeEnd("실행시간"); // 타이머 종료
+})();
