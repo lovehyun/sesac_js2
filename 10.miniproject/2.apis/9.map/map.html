@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+     <style>
+        #map { height: 600px; }
+     </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
+    <script>
+        var map = L.map('map').setView([37.51854, 126.93751], 13); // 63빌딩 좌표
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var touristSpot = [
+        {
+            name: '경복궁',
+            location: [37.578, 126.977],
+            description: '경복궁은 조선 시대의 법궁이자 서울의 대표적인 궁궐입니다.',
+            imageUrl: 'https://via.placeholder.com/150',
+        },
+        {
+            name: '명동',
+            location: [37.5635, 126.981],
+            description: '명동은 서울의 대표적인 쇼핑 거리로, 다양한 상점과 식당이 위치해 있습니다.',
+            imageUrl: 'https://via.placeholder.com/150',
+        },
+        {
+            name: '남산 타워',
+            location: [37.5515, 126.988],
+            description: '남산 타워는 서울의 랜드마크 중 하나로, 멋진 서울 전경을 감상할 수 있는 곳입니다.',
+            imageUrl: 'data:image/jpeg;base64,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',
+        },
+            // 원하는것 더 추가하시오...
+        ]
+
+        touristSpot.forEach((spot) => {
+            var marker = L.marker(spot.location).addTo(map);
+
+            marker.on('click', () => {
+                map.flyTo(spot.location, 16);
+            })
+
+            marker.on('click', () => {
+                var popupContent = `
+                <div>
+                    <h3>${spot.name}</h3>
+                    <p>${spot.description}</p>
+                    <img src="${spot.imageUrl}" alt="${spot.name}" style="width:100%; height: auto;" />
+                </div>
+                `
+                var popup = L.popup()
+                    .setLatLng(spot.location)
+                    .setContent(popupContent)
+                    .openOn(map);
+            })
+        })
+
+        // var marker = L.marker([37.51854, 126.93751]).addTo(map);
+        // var circle = L.circle([37.51854, 126.93751], {
+        //     color: 'red',
+        //     fillColor: 'blue',
+        //     fillOpacity: 0.5,
+        //     radius: 500,
+        // }).addTo(map);
+    </script>
+
+</body>
+</html>
