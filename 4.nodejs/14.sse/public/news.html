@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>라이브 새싹 뉴스</h1>
+    <div id="news-container"></div>
+    <script>
+        const eventSource = new EventSource('/news'); // 내가 브라우저에 접속한 주소 뒤에.. /news
+        const newsContainer = document.getElementById('news-container');
+
+        eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            newsContainer.innerHTML += data.news + '<hr>';
+        }
+
+        // TODO1. 가장 최근 5개만 표시하는데, 최신을 위에 표시한다...
+        // TODO2. 가장 최근 1개가 업데이트 될때마다, 노란색 배경으로 하이라이트를 하거나.. 등등..
+    </script>
+</body>
+</html>
